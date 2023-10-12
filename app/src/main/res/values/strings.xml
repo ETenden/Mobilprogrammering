@@ -5,4 +5,7 @@
     <string name="switchScreen">Switch Screen</string>
     <string name="addSong">Add Song</string>
     <string name="removeSong">Remove Song</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="favourites">Favourite</string>
 </resources>
