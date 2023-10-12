@@ -69,7 +69,8 @@ fun DefNotSpotifyApp(myViewModel: MyViewModel = viewModel()) {
     val bottomNavigationScreens = listOf(
         Screen.Favourites,
         Screen.Home,
-        Screen.Profile
+        Screen.Profile,
+        Screen.Library
     )
 
     Scaffold(bottomBar = { BottomNavigationBar(navController, bottomNavigationScreens) },
