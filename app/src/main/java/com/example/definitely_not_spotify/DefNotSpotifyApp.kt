@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -51,6 +52,7 @@ sealed class Screen(val route: String, @StringRes val title: Int, val icon: Imag
     object Home : Screen("Home", R.string.home, Icons.Default.Home)
     object Profile : Screen("Profile", R.string.profile, Icons.Default.Person)
     object Favourites : Screen("Favourites", R.string.favourites, Icons.Default.Favorite)
+    object Library : Screen("Library", R.string.library, Icons.Default.List)
 }
 
 
@@ -104,10 +106,14 @@ fun DefNotSpotifyApp(myViewModel: MyViewModel = viewModel()) {
                 HomeScreen(screen.title, uiState.value, screen.icon, mod) }
             composable(Screen.Profile.route) {
                 val screen = Screen.Profile
-                GenericScreen(screen.title, uiState.value, screen.icon, mod) }
+                Profile(screen.title, uiState.value, screen.icon, mod) }
             composable(Screen.Favourites.route) {
                 val screen = Screen.Favourites
                 GenericScreen(screen.title, uiState.value, screen.icon, mod) }
+            composable(Screen.Library.route) {
+                val screen = Screen.Library
+                Library(screen.title, uiState.value, screen.icon, mod)
+            }
         }
 
     }
@@ -135,6 +141,44 @@ fun GenericScreen(@StringRes screenName: Int, counterText : String, icon: ImageV
 
 @Composable
 fun HomeScreen(@StringRes screenName: Int, counterText : String, icon: ImageVector, modifier: Modifier) {
+    Column(modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+        Text(text = stringResource(screenName))
+        Text(text = counterText)
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Testing")
+        }
+
+    }
+
+    Toast.makeText(LocalContext.current,
+        "Hello from " + stringResource(screenName),
+        Toast.LENGTH_SHORT).show()
+
+}
+
+@Composable
+fun Profile(@StringRes screenName: Int, counterText : String, icon: ImageVector, modifier: Modifier) {
+    Column(modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+        Text(text = stringResource(screenName))
+        Text(text = counterText)
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Testing")
+        }
+
+    }
+
+    Toast.makeText(LocalContext.current,
+        "Hello from " + stringResource(screenName),
+        Toast.LENGTH_SHORT).show()
+
+}
+
+@Composable
+fun Library(@StringRes screenName: Int, counterText : String, icon: ImageVector, modifier: Modifier) {
     Column(modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
