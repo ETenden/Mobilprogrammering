@@ -7,4 +7,21 @@
     <string name="profile">Profile</string>
     <string name="favourites">Favourite</string>
     <string name="library">Library</string>
+    <string name="song_poster">Song poster</string>
+    <string name="add_icon">Add Icon</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="repeat_password">Repeat password</string>
+
+    <!-- SignUpScreen -->
+    <string name="empty_password_error">Password cannot be empty.</string>
+    <string name="create_account">Create account</string>
+    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+    <string name="email_error">Please insert a valid email.</string>
+    <string name="songs">Songs</string>
+    <string name="login">Log In</string>
+    <string name="could_not_create_account">Could not create account</string>
+    <string name="could_not_log_in">Could not log in</string>
+    <string name="sign_out">Sign out</string>
 </resources>
