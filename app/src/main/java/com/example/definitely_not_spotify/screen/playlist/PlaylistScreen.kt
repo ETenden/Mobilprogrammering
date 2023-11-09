@@ -250,8 +250,8 @@ fun AddSongsToPlaylistDialog(
                     playlists.forEachIndexed { index, playlist ->
                         DropdownMenuItem(onClick = {
                             selectedPlaylistIndex = index
-                        }) {
-                        }
+                        }) { Text(text = playlist.name) }
+
                     }
                 }
             },
@@ -285,7 +285,4 @@ fun AddSongsToPlaylistDialog(
     }
 }
 
-fun DropdownMenuItem(onClick: () -> Unit, interactionSource: () -> Unit) {
-
-}
 
