@@ -48,4 +48,20 @@ class AudioPlayer @Inject constructor(){
     fun getCurrentTime(): Int{
         return currentTime.intValue
     }
+
+
+    fun skipAhead() {
+
+        val fiveSeconds = mediaPlayer.currentPosition + 4000
+
+        mediaPlayer.seekTo(fiveSeconds)
+    }
+
+
+    fun skipBack() {
+
+        val fiveSeconds = mediaPlayer.currentPosition - 6000
+
+        mediaPlayer.seekTo(fiveSeconds)
+    }
 }

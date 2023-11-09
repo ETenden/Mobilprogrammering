@@ -1,6 +1,7 @@
 package com.example.definitely_not_spotify.screen.songdetail
 
 import android.media.MediaPlayer
+import android.widget.SeekBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,13 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -39,24 +43,56 @@ fun SongDetailScreen(
 
     val mediaPlayer = remember { MediaPlayer() }
 
+    var sliderPosition by remember { mutableFloatStateOf(0f) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxSize()
     ) {
-        // Play/Pause Button
-        Button(
-            onClick = {
-                println("isPlaying STATUS: ${viewModel.audioPlayer.isPlaying.value}")
-                viewModel.togglePlayback(song)
-                println("TRYKKET PÅ KNAPP INNI GREIA $song")
-                println("isPlaying STATUS: ${viewModel.audioPlayer.isPlaying.value}")
-            },
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            println("TRYKKET PÅ KNAPP")
-            Text(if (viewModel.audioPlayer.isPlaying.value) "Pause" else "Play")
+
+        Slider(
+            value = sliderPosition,
+            onValueChange = { sliderPosition = it; viewModel.audioPlayer.mediaPlayer.seekTo((viewModel.audioPlayer.mediaPlayer.duration * sliderPosition).toInt()) }
+        )
+        Text(text = sliderPosition.toString())
+
+
+        
+        Row {
+
+            Button(
+                onClick = {
+                    viewModel.audioPlayer.skipBack()
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(text = "<<")
+            }
+
+            // Play/Pause Button
+            Button(
+                onClick = {
+                    viewModel.togglePlayback(song)
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(if (viewModel.audioPlayer.isPlaying.value) "Pause" else "Play")
+            }
+            
+            Button(
+                onClick = {
+                    viewModel.audioPlayer.skipAhead()
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(text = ">>")
+            }
         }
+        
+        
+        
+        
 
         Text(text = song.title, style = MaterialTheme.typography.headlineLarge)
 
@@ -71,6 +107,8 @@ fun SongDetailScreen(
         LaunchedEffect(viewModel.audioPlayer.isPlaying.value){
             while (viewModel.audioPlayer.isPlaying.value){
                 viewModel.audioPlayer.updateCurrentTime()
+                sliderPosition = viewModel.audioPlayer.getCurrentTime().toFloat() / (viewModel.audioPlayer.mediaPlayer.duration / 1000)
+
                 delay(1000)
             }
         }
