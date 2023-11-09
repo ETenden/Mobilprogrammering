@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.definitely_not_spotify.R
+import kotlinx.coroutines.delay
 import java.io.IOException
 
 @Composable
@@ -45,15 +47,35 @@ fun SongDetailScreen(
         // Play/Pause Button
         Button(
             onClick = {
+                println("isPlaying STATUS: ${viewModel.audioPlayer.isPlaying.value}")
                 viewModel.togglePlayback(song)
+                println("TRYKKET PÅ KNAPP INNI GREIA $song")
+                println("isPlaying STATUS: ${viewModel.audioPlayer.isPlaying.value}")
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {
+            println("TRYKKET PÅ KNAPP")
             Text(if (viewModel.audioPlayer.isPlaying.value) "Pause" else "Play")
         }
 
         Text(text = song.title, style = MaterialTheme.typography.headlineLarge)
-        Text(text = song.duration, style = MaterialTheme.typography.bodyMedium)
+
+        Row {
+            Text(text = "${formatTime(viewModel.audioPlayer.getCurrentTime())} / ", style = MaterialTheme.typography.bodyMedium)
+
+            Text(text = "${song.duration} / ", style = MaterialTheme.typography.bodyMedium)
+
+            Text(text = formatTime(viewModel.audioPlayer.mediaPlayer.duration / 1000), style = MaterialTheme.typography.bodyMedium)
+        }
+
+        LaunchedEffect(viewModel.audioPlayer.isPlaying.value){
+            while (viewModel.audioPlayer.isPlaying.value){
+                viewModel.audioPlayer.updateCurrentTime()
+                delay(1000)
+            }
+        }
+
+
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(song.posterUrl)
@@ -64,7 +86,8 @@ fun SongDetailScreen(
             modifier = Modifier
                 .padding(16.dp)
                 .width(400.dp)
-                .height(600.dp
+                .height(
+                    600.dp
                 ))
     }
 
@@ -73,6 +96,12 @@ fun SongDetailScreen(
             mediaPlayer.release()
         }
     }
+}
+
+fun formatTime(seconds: Int): String{
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+    return String.format("%02d:%02d", minutes, remainingSeconds)
 }
 
 

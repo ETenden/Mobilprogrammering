@@ -240,7 +240,7 @@ fun AddSongsToPlaylistDialog(
                 // Dropdown for selecting the target playlist
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Select Playlist:")
-                DropdownMenu(
+                /*DropdownMenu(
                     expanded = selectedPlaylistIndex >= 0,
                     onDismissRequest = {
                         // Dismiss the playlist selection dropdown
@@ -253,7 +253,7 @@ fun AddSongsToPlaylistDialog(
                         }) { Text(text = playlist.name) }
 
                     }
-                }
+                }*/
             },
             confirmButton = {
                 Button(
