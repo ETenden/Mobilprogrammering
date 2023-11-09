@@ -2,7 +2,6 @@ package com.example.definitely_not_spotify.screen.songlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.definitely_not_spotify.dummydata.Datasource
 import com.example.definitely_not_spotify.model.Song
 import com.example.definitely_not_spotify.service.AccountService
 import com.example.definitely_not_spotify.service.StorageService
@@ -12,29 +11,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SongListViewModel @Inject constructor(private val storageService: StorageService,
-                                            private val accountService: AccountService
-)
-    : ViewModel() {
-
+class SongListViewModel @Inject constructor(private val storageService: StorageService, private val accountService: AccountService) : ViewModel() {
 
     val songs = storageService.songs
 
     init {
         createAnonymousAccount()
-
-        viewModelScope.launch {
-            if (songs.first().isEmpty()) {
-                Datasource.songLists.forEach { song ->
-                    storageService.save(song)
-                }
-            }
-        }
     }
 
-    fun createSong(songTitle: String) {
+    fun createSong(song: Song) {
         viewModelScope.launch {
-            storageService.save(Song(title = songTitle))
+            storageService.save(song)
         }
     }
 

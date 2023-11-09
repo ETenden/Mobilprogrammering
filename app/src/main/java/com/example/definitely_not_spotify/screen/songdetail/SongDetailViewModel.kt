@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.definitely_not_spotify.AudioPlayer
 import com.example.definitely_not_spotify.SONG_ID
 import com.example.definitely_not_spotify.model.Song
 import com.example.definitely_not_spotify.service.StorageService
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SongDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    val audioPlayer: AudioPlayer // Inject the AudioPlayer
 ) : ViewModel() {
     val song = mutableStateOf(Song())
 
@@ -25,5 +27,13 @@ class SongDetailViewModel @Inject constructor(
                 song.value = storageService.getSong(songId) ?: Song()
             }
         }
+    }
+
+    fun togglePlayback(song: Song) {
+        audioPlayer.togglePlayback(song.audioUrl)
+    }
+
+    override fun onCleared() {
+        audioPlayer.release()
     }
 }

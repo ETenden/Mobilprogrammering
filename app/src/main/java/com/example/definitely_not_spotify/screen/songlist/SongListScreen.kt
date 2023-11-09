@@ -63,7 +63,7 @@ fun SongListScreen(modifier: Modifier = Modifier,
                 }
             }, modifier = modifier.padding(16.dp))
         }
-        FloatingActionButton(onClick = { viewModel.createSong(songTitle.value) },
+        FloatingActionButton(onClick = { viewModel.createSong(Song()) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 16.dp, end = 16.dp)) {

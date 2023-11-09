@@ -17,4 +17,5 @@ abstract class ServiceModule {
 
     @Binds
     abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
+
 }
