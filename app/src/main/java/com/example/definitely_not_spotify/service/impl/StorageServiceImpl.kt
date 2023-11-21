@@ -1,5 +1,6 @@
 package com.example.definitely_not_spotify.service.impl
 
+import android.util.Log
 import com.example.definitely_not_spotify.model.Playlist
 import com.example.definitely_not_spotify.model.Song
 import com.example.definitely_not_spotify.service.AccountService
@@ -60,6 +61,37 @@ constructor(
     override suspend fun savePlaylist(playlist: Playlist): String {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getSongsForPlaylist(playlistId: String): List<Song> {
+        val playlistSnapshot = firestore.collection("playlists")
+            .document(playlistId)
+            .get()
+            .await()
+
+        val songIds = playlistSnapshot.get("songIds") as? List<String> ?: emptyList()
+        println("Fetched songIds for playlist: $songIds")
+
+        if (songIds.isNotEmpty()) {
+            val songs = songIds.mapNotNull { songId ->
+                val songSnapshot = firestore.collection("songs")
+                    .document(songId)
+                    .get()
+                    .await()
+
+                val song = songSnapshot.toObject(Song::class.java)
+                if (song != null) {
+                    println("Fetched song: $song")
+                } else {
+                    println("Failed to fetch song for ID: $songId")
+                }
+                song
+            }
+            return songs
+        }
+
+        return emptyList()
+    }
+
 
     override suspend fun updatePlaylist(playlist: Playlist) {
         // You can use the document ID (uid) to update the playlist

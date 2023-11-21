@@ -5,8 +5,8 @@ import com.example.definitely_not_spotify.model.Song
 import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
-    val songs: Flow<List<Song>>  // Property for songs
-    val playlists: Flow<List<Playlist>>  // Property for playlists
+    val songs: Flow<List<Song>>
+    val playlists: Flow<List<Playlist>>
 
     suspend fun getSong(songId: String): Song?
     suspend fun save(song: Song): String
@@ -14,7 +14,9 @@ interface StorageService {
     suspend fun getPlaylist(playlistId: String): Playlist?
     suspend fun savePlaylist(playlist: Playlist): String
     suspend fun updatePlaylist(playlist: Playlist)
+    suspend fun getSongsForPlaylist(playlistId: String): List<Song>
     suspend fun createPlaylist(playlist: Playlist): String
 }
+
 
 
