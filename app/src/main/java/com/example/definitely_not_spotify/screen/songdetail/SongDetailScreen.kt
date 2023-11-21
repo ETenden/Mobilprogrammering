@@ -70,51 +70,8 @@ fun SongDetailScreen(
                 ))
 
 
-        Slider(
-            value = sliderPosition,
-            onValueChange = { sliderPosition = it; viewModel.audioPlayer.mediaPlayer.seekTo((viewModel.audioPlayer.mediaPlayer.duration * sliderPosition).toInt()) }
-        )
-        Row {
-            Text(text = "${formatTime((sliderPosition*songLength).toInt())} / ", style = MaterialTheme.typography.bodyMedium)
 
-            Text(text = "${song.duration} / ", style = MaterialTheme.typography.bodyMedium)
-
-            Text(text = formatTime(songLength), style = MaterialTheme.typography.bodyMedium)
-        }
-
-
-        
-        Row {
-
-            Button(
-                onClick = {
-                    viewModel.audioPlayer.skipBack()
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = "<<")
-            }
-
-            // Play/Pause Button
-            Button(
-                onClick = {
-                    viewModel.togglePlayback(song)
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(if (viewModel.audioPlayer.isPlaying.value) "Pause" else "Play")
-            }
-            
-            Button(
-                onClick = {
-                    viewModel.audioPlayer.skipAhead()
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = ">>")
-            }
-        }
-        
+        PlaybackControls(viewModel = viewModel)
         
         
         
