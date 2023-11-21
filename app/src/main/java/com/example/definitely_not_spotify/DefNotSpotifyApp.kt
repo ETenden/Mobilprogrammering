@@ -57,8 +57,7 @@ fun DefNotSpotifyApp() {
                     modifier = Modifier.padding(innerPaddingModifier)
                 ) {
                     composable(SONG_LIST) {
-                        SongListScreen(onSongClick = {
-                                songId ->
+                        SongListScreen(onSongClick = { songId ->
                             val route = "${SONG_DETAIL}?$SONG_ID=$songId"
                             navController.navigate(route)
                         })
@@ -74,25 +73,13 @@ fun DefNotSpotifyApp() {
                     }
 
                     composable(PLAYLIST) {
-                        PlaylistScreen()
+                        PlaylistScreen(navController = navController)
                     }
 
                     composable("$SONG_SELECTION/{$PLAYLIST_ID}") { backStackEntry ->
-                        val viewModel: PlaylistViewModel = hiltViewModel()
-                        val songs = viewModel.songs.collectAsState(emptyList()).value
-
-                        SongSelectionScreen(
-                            songs = songs,
-                            onSongSelected = { song, selected ->
-                                viewModel.selectSong(song, selected)
-                            },
-                            onConfirmSelection = {
-                                // Handle the confirmation of selected songs here
-                            },
-                        )
+                        val playlistId = backStackEntry.arguments?.getString(PLAYLIST_ID) ?: ""
+                        SongSelectionScreen(playlistId = playlistId, navController = navController)
                     }
-
-
 
                     composable(SIGN_UP) {
                         SignUpScreen(loggedIn = { navController.navigate(SONG_LIST) })
