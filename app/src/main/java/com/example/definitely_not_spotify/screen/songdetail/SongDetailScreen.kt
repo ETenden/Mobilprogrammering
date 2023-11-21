@@ -45,17 +45,42 @@ fun SongDetailScreen(
 
     var sliderPosition by remember { mutableFloatStateOf(0f) }
 
+    val songLength = viewModel.audioPlayer.mediaPlayer.duration / 1000
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxSize()
     ) {
 
+        Text(text = song.title, style = MaterialTheme.typography.headlineLarge)
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(song.posterUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.song_poster),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(16.dp)
+                .width(400.dp)
+                .height(
+                    400.dp
+                ))
+
+
         Slider(
             value = sliderPosition,
             onValueChange = { sliderPosition = it; viewModel.audioPlayer.mediaPlayer.seekTo((viewModel.audioPlayer.mediaPlayer.duration * sliderPosition).toInt()) }
         )
-        Text(text = sliderPosition.toString())
+        Row {
+            Text(text = "${formatTime((sliderPosition*songLength).toInt())} / ", style = MaterialTheme.typography.bodyMedium)
+
+            Text(text = "${song.duration} / ", style = MaterialTheme.typography.bodyMedium)
+
+            Text(text = formatTime(songLength), style = MaterialTheme.typography.bodyMedium)
+        }
 
 
         
@@ -94,15 +119,9 @@ fun SongDetailScreen(
         
         
 
-        Text(text = song.title, style = MaterialTheme.typography.headlineLarge)
 
-        Row {
-            Text(text = "${formatTime(viewModel.audioPlayer.getCurrentTime())} / ", style = MaterialTheme.typography.bodyMedium)
 
-            Text(text = "${song.duration} / ", style = MaterialTheme.typography.bodyMedium)
 
-            Text(text = formatTime(viewModel.audioPlayer.mediaPlayer.duration / 1000), style = MaterialTheme.typography.bodyMedium)
-        }
 
         LaunchedEffect(viewModel.audioPlayer.isPlaying.value){
             while (viewModel.audioPlayer.isPlaying.value){
@@ -114,19 +133,7 @@ fun SongDetailScreen(
         }
 
 
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(song.posterUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = stringResource(R.string.song_poster),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(16.dp)
-                .width(400.dp)
-                .height(
-                    600.dp
-                ))
+
     }
 
     DisposableEffect(Unit) {

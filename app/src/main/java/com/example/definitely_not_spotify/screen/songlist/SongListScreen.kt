@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,6 +49,12 @@ fun SongListScreen(modifier: Modifier = Modifier,
     val songs = viewModel.songs.collectAsStateWithLifecycle(emptyList())
     val songTitle = remember { mutableStateOf("") }
 
+    LaunchedEffect(songTitle.value){
+        viewModel.setSearchQuery(songTitle.value)
+    }
+
+
+
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             TextField(value = songTitle.value,
@@ -63,13 +70,9 @@ fun SongListScreen(modifier: Modifier = Modifier,
                 }
             }, modifier = modifier.padding(16.dp))
         }
-        FloatingActionButton(onClick = { viewModel.createSong(Song()) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 16.dp, end = 16.dp)) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_icon),)
-        }
     }
+
+
 
 }
 
@@ -85,7 +88,7 @@ fun SongItem(song: Song, onSongClick: (String) -> Unit) {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(if (song.posterUrl == "") R.drawable.rickastley else song.posterUrl)
+                    .data(song.posterUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = stringResource(R.string.song_poster),
@@ -111,4 +114,5 @@ fun SongItem(song: Song, onSongClick: (String) -> Unit) {
 
         }
     }
+
 }
