@@ -54,17 +54,16 @@ fun PlaylistScreen(
     viewModel: PlaylistViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    // Use the viewModel to get the playlists
+    // Bruker viewmodel for å hente ut spillelister
     val playlistsState by viewModel.playlists.collectAsState(emptyList())
 
-    // Create a mutable state to hold the playlist name entered by the user
+    // Mutable state for å holde på navnet som brukeren skriver inn
     var playlistName by remember { mutableStateOf("") }
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // If needed, add search or filter functionality here
 
-            // Input field for entering the playlist name
+            // Input felt for å skrive inn navnet på en ny spilleliste
             TextField(
                 value = playlistName,
                 onValueChange = { playlistName = it },
@@ -75,18 +74,18 @@ fun PlaylistScreen(
                     .padding(top = 8.dp)
             )
 
-            // Button to create a new playlist
+            // Knapp for å lage en ny spilleliste
             Button(
                 onClick = {
-                    // Check if the playlist name is not empty
+                    // Sjekker at verdien ikke er null
                     if (playlistName.isNotBlank()) {
-                        // Create a new playlist based on the entered name
+                        // Lager en ny spilleliste basert på input fra brukeren
                         val newPlaylist = Playlist(name = playlistName)
 
-                        // Trigger the playlist creation in the ViewModel
+                        // Trigger spilleliste funksjonen i ViewModel
                         viewModel.createPlaylist(newPlaylist)
 
-                        // Clear the input field after creating the playlist
+                        // Input feltet blir tom etter spillelisten er laget
                         playlistName = ""
                     }
                 },
@@ -98,17 +97,17 @@ fun PlaylistScreen(
                 Text("Create Playlist")
             }
 
-            // Spacer to add some vertical space
+            // Spacer for å lage litt mer rom imellom
             Spacer(modifier = Modifier.height(16.dp))
 
-            // List of playlists
+            // Liste av spillelister
             LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                 items(playlistsState) { playlist ->
-                    // Use a custom item composable for playlists
+                    // Bruke en spilleliste item composable for playlists
                     PlaylistItem(
                         playlist = playlist,
                         onPlaylistClick = {
-                            // Navigate to SongSelectionScreen and pass the playlistId
+                            // Navigere til SongSelectionScreen basert på playlistId
                             navController.navigate("$SONG_SELECTION/${playlist.uid}")
                         }
                     )
@@ -118,22 +117,23 @@ fun PlaylistScreen(
     }
 }
 
+//Composable for et UI element som brukes for å vise et playlist item
 @Composable
 fun PlaylistItem(
     playlist: Playlist,
     onPlaylistClick: (Playlist) -> Unit
 ) {
+    //Kort composable for å vise frem spillelister
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onPlaylistClick(playlist) }
+            .clickable { onPlaylistClick(playlist) } //Trykker på en spilleliste
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // You can customize the appearance of the playlist item
             Text(
                 text = playlist.name,
                 style = MaterialTheme.typography.bodyMedium,
@@ -141,8 +141,6 @@ fun PlaylistItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-
-            // Add other details if needed
         }
     }
 }

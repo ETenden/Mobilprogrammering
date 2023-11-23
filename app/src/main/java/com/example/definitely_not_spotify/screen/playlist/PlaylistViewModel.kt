@@ -20,45 +20,31 @@ class PlaylistViewModel @Inject constructor(
     private val storageService: StorageService
 ) : ViewModel() {
 
-    // Flow to collect playlists
+    // Flow for å hente ut playlists
     val playlists: Flow<List<Playlist>> = storageService.playlists
-    val songs: Flow<List<Song>> = storageService.songs
-    private val _selectedSongs = mutableSetOf<Song>()
-    private val _songsForPlaylist = MutableStateFlow<List<Song>>(emptyList())
-    val songsForPlaylist: StateFlow<List<Song>> get() = _songsForPlaylist
     val playlist = mutableStateOf<Playlist?>(null)
 
-    fun selectSong(song: Song, isSelected: Boolean) {
-        if (isSelected) {
-            _selectedSongs.add(song)
-        } else {
-            _selectedSongs.remove(song)
-        }
-    }
-
-    // Function to create a new playlist
+    // Funksjon for å lage en ny playlist
     fun createPlaylist(playlist: Playlist) {
         viewModelScope.launch {
-            // Trigger the playlist creation in the storage service
+            // Trigger spilleliste i storage service
             storageService.createPlaylist(playlist)
         }
     }
 
     fun getPlaylist(playlistId: String) {
         viewModelScope.launch {
-            // Retrieve the playlist from the storage service
+            // Hente spilleliste fra storage service
             val fetchedPlaylist = storageService.getPlaylist(playlistId)
 
-            // Update the state with the retrieved playlist
+            // Oppdater state med spillelisten som er hentet
             playlist.value = fetchedPlaylist
 
-            // Print some information for debugging
-            Log.d("PlaylistViewModel", "Fetched playlist: $fetchedPlaylist")
         }
     }
 
     suspend fun getSongsForPlaylist(playlistId: String): List<Song> {
-        // Retrieve songs for the playlist from the storage service
+        // Hente sanger for spillelisten fra storage service
         return storageService.getSongsForPlaylist(playlistId)
     }
 

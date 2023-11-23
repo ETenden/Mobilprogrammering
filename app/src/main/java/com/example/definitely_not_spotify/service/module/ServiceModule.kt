@@ -9,12 +9,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+//Dagger hilt modul som definerer bindinger for service implementasjoner
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class ServiceModule {
+    //Binder StorageServiceImpl som implementasjonen for StorageService
     @Binds
     abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
+    //Binder AccountServiceImpl som implementasjonen for AccountService
     @Binds
     abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
 

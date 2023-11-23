@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+//Implementasjon av StorageService som bruker firestore for å lagre og hente ut sanger og spillelister
 class StorageServiceImpl
 @Inject
 constructor(
@@ -23,6 +24,8 @@ constructor(
     private val auth: AccountService
 ) : StorageService {
 
+    //Flow som representerer en liste av sanger tilgjengelig for brukeren
+    //Denne oppdateres basert på brukerens autentikasjon
     @OptIn(ExperimentalCoroutinesApi::class)
     override val songs: Flow<List<Song>> = auth.currentUser.flatMapLatest { user ->
         firestore.collection(SONG_COLLECTION)
@@ -33,6 +36,8 @@ constructor(
             .dataObjects()
     }
 
+    //Flow som representerer en liste av spillelister tilgjengelig for brukeren
+    //Denne oppdateres basert på brukerens autentikasjon
     @OptIn(ExperimentalCoroutinesApi::class)
     override val playlists: Flow<List<Playlist>> = auth.currentUser.flatMapLatest { user ->
         firestore.collection(PLAYLIST_COLLECTION)
@@ -43,25 +48,28 @@ constructor(
             .dataObjects()
     }
 
-
+    //Hente ut en spesifikk sang basert på ID fra firestore
     override suspend fun getSong(songId: String): Song? =
         firestore.collection(SONG_COLLECTION).document(songId).get().await().toObject()
 
+    //Lager en ny spilleliste i firestore og retunerer ID
     override suspend fun createPlaylist(playlist: Playlist): String {
         val playlistWithUserId = playlist.copy(userId = auth.currentUserId)
         return firestore.collection(PLAYLIST_COLLECTION).add(playlistWithUserId).await().id
     }
 
+    //Henter ut en spesifikk spilleliste basert på IDen i firestore
     override suspend fun getPlaylist(playlistId: String): Playlist? {
         return firestore.collection(PLAYLIST_COLLECTION).document(playlistId)
             .get()
             .await()
             .toObject()
     }
-    override suspend fun savePlaylist(playlist: Playlist): String {
-        TODO("Not yet implemented")
-    }
 
+
+    //Henter ut en liste av sanger basert på spillelisten
+    //Returnerer en tom liste hvis det ikke er noen sanger i spillelisten
+    //Koden ble laget med hjelp av Chat GPT
     override suspend fun getSongsForPlaylist(playlistId: String): List<Song> {
         val playlistSnapshot = firestore.collection("playlists")
             .document(playlistId)
@@ -69,7 +77,6 @@ constructor(
             .await()
 
         val songIds = playlistSnapshot.get("songIds") as? List<String> ?: emptyList()
-        println("Fetched songIds for playlist: $songIds")
 
         if (songIds.isNotEmpty()) {
             val songs = songIds.mapNotNull { songId ->
@@ -90,29 +97,6 @@ constructor(
         }
 
         return emptyList()
-    }
-
-
-    override suspend fun updatePlaylist(playlist: Playlist) {
-        // You can use the document ID (uid) to update the playlist
-        val playlistId = playlist.uid
-        val playlistRef = firestore.collection(PLAYLIST_COLLECTION).document(playlistId)
-
-        // Update the playlist document in Firestore
-        playlistRef.set(playlist, SetOptions.merge())
-            .addOnSuccessListener { /* Handle success, if needed */ }
-            .addOnFailureListener { exception ->
-                /* Handle failure or error, if needed */
-            }
-    }
-
-    override suspend fun save(song: Song): String {
-        val songWithUserId = song.copy(userId = auth.currentUserId)
-        return firestore.collection(SONG_COLLECTION).add(songWithUserId).await().id
-    }
-
-    override suspend fun getAllPlaylists(): List<Playlist> {
-        TODO("Not yet implemented")
     }
 
     companion object {
