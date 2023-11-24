@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,9 +38,9 @@ fun DefNotSpotifyApp() {
             val navController = rememberNavController()
 
             Scaffold(
-                topBar =  {
-                    TopAppBar(
-                        title = { Text(stringResource(R.string.songs)) },
+                //Navigasjonsbar på bunnen av siden, med 3 knapper. En for innloggingsskjerm, en for spilleliste skjerm, og en for hjemskjermen, hvor sanger ligger.
+                bottomBar =  {
+                    BottomAppBar(
                         actions = {
                             IconButton(onClick = { navController.navigate(SIGN_UP) }) {
                                 Icon(imageVector = Icons.Default.Person, contentDescription = "Action")
@@ -60,6 +61,7 @@ fun DefNotSpotifyApp() {
                         .fillMaxSize()
                 ) {
 
+                    //Bruker en navhost for å manøvrere seg igjennom appen.
                     NavHost(
                         navController = navController,
                         startDestination = SONG_LIST,

@@ -45,8 +45,6 @@ fun SongDetailScreen(
 
     var sliderPosition by remember { mutableFloatStateOf(0f) }
 
-    val songLength = viewModel.audioPlayer.mediaPlayer.duration / 1000
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

@@ -74,10 +74,6 @@ fun SongSelectionScreen(
                     SongItem(
                         song = song,
                         onSongClick = onSongClick,
-                        /*onAddToPlaylistClicked = {
-                            // Handle adding the song to the playlist
-                            viewModel.selectSong(song, true)
-                        }*/
                     )
                 }
             }

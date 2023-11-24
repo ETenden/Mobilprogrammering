@@ -17,7 +17,8 @@ class SongDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val storageService: StorageService,
     val audioPlayer: AudioPlayer // Inject the AudioPlayer
-) : ViewModel() {
+    ) : ViewModel() {
+
     val song = mutableStateOf(Song())
 
     init {
