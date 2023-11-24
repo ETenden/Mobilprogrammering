@@ -57,8 +57,7 @@ fun DefNotSpotifyApp() {
             ) { innerPaddingModifier ->
                 Column(
                     modifier = Modifier
-                        .padding(innerPaddingModifier)
-                        .fillMaxSize()
+
                 ) {
 
                     //Bruker en navhost for å manøvrere seg igjennom appen.

@@ -19,8 +19,10 @@ class SongDetailViewModel @Inject constructor(
     val audioPlayer: AudioPlayer // Inject the AudioPlayer
     ) : ViewModel() {
 
+    //Variabel for sangen vi spiller av for øyeblikket
     val song = mutableStateOf(Song())
 
+    //Henter verdien av sangen vi har trykket på når den initialiserer
     init {
         val songId = savedStateHandle.get<String>(SONG_ID)
         if (songId != null) {
@@ -30,10 +32,12 @@ class SongDetailViewModel @Inject constructor(
         }
     }
 
+    //Toggle for å pause of starte sangen
     fun togglePlayback(song: Song) {
         audioPlayer.togglePlayback(song.audioUrl)
     }
 
+    //Frigjør ressurser
     override fun onCleared() {
         audioPlayer.release()
     }

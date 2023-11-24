@@ -23,7 +23,6 @@ class SongListViewModel @Inject constructor(
     val songs = _songs.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
 
     init {
         createAnonymousAccount()
