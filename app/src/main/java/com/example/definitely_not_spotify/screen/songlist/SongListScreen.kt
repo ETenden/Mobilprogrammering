@@ -40,6 +40,7 @@ import coil.request.ImageRequest
 import com.example.definitely_not_spotify.R
 import com.example.definitely_not_spotify.model.Song
 
+//Composable som viser alle sangene på skjermen.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongListScreen(modifier: Modifier = Modifier,
@@ -47,8 +48,10 @@ fun SongListScreen(modifier: Modifier = Modifier,
                    viewModel: SongListViewModel = hiltViewModel()) {
 
     val songs = viewModel.songs.collectAsStateWithLifecycle(emptyList())
+    //songTitle brukes for søkefeltet.
     val songTitle = remember { mutableStateOf("") }
 
+    //Når songtitle endrer seg så blir setSearchQuery kjørt på nytt med nye verdien.
     LaunchedEffect(songTitle.value){
         viewModel.setSearchQuery(songTitle.value)
     }
@@ -57,12 +60,16 @@ fun SongListScreen(modifier: Modifier = Modifier,
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
+
+            //Søkeboks
             TextField(value = songTitle.value,
                 onValueChange = { songTitle.value = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(top = 4.dp))
+
+            //Grid med alle sangene
             LazyVerticalGrid(columns = GridCells.FixedSize(180.dp), content = {
                 items(songs.value, key = { it.uid }) { song ->
                     SongItem(song = song,
@@ -76,6 +83,8 @@ fun SongListScreen(modifier: Modifier = Modifier,
 
 }
 
+
+//Composable som brukes for å plassere alle sangene på siden. Gir de bildet sitt og gjør at du kan trykke på de og alt.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongItem(song: Song, onSongClick: (String) -> Unit) {

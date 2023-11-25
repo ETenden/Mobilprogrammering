@@ -19,15 +19,19 @@ class SongListViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
+    //Tom liste med sanger, som vil bli fylt opp av søkeresultatet
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
+    //Lager en read_only versjon av _songs
     val songs = _songs.asStateFlow()
 
+    //Variabel som holder styr på hva som står i søkefeltet
     private val _searchQuery = MutableStateFlow("")
 
     init {
+        //Blir tracket som en anonym bruker om de ikke er logget inn
         createAnonymousAccount()
 
-        // Observe changes in the search query and update the filtered songs
+        //Filtrerer sangene som dukker opp til å bare være de som matcher det som står i søkefeltet
         viewModelScope.launch {
             combine(storageService.songs, _searchQuery) { allSongs, query ->
                 if (query.isBlank()) {
@@ -48,7 +52,7 @@ class SongListViewModel @Inject constructor(
         }
     }
 
-    // Function to update the search query
+    //Brukes til å gjøre _searchQuery lik hva enn som blir skrevet i søkefeltet
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
     }

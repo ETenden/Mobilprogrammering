@@ -50,7 +50,7 @@ fun SongSelectionScreen(
     onSongClick: (String) -> Unit,
     viewModel: PlaylistViewModel = hiltViewModel()
 ) {
-    // Fetch playlist and songs directly in the composable
+    // Variabler for å hente spilleliste og sanger
     val playlist = viewModel.playlist.value
     val songsState = remember { mutableStateOf<List<Song>>(emptyList()) }
 
@@ -94,7 +94,7 @@ fun SongSelectionScreen(
         }
     } ?: Text("Playlist details not available")
 
-    // Trigger fetching songs when the playlistId changes
+    // Henter inn sanger når spillelisten endrer på seg.
     LaunchedEffect(playlistId) {
         viewModel.getPlaylist(playlistId)
         val fetchedSongs = viewModel.getSongsForPlaylist(playlistId)
@@ -103,6 +103,7 @@ fun SongSelectionScreen(
     }
 }
 
+//Composable som henter spesifikke sanger med cover og gjør at de kan trykkes på.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongItem(song: Song, onSongClick: (String) -> Unit) {
