@@ -54,14 +54,14 @@ fun SongSelectionScreen(
     val playlist = viewModel.playlist.value
     val songsState = remember { mutableStateOf<List<Song>>(emptyList()) }
 
-    // Now you can use the 'playlist' and 'songs' variables in your UI
+    // Gjør det mulig å bruke playlist i UI
     playlist?.let { selectedPlaylist ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Display playlist details
+            // Viser det som ligger i playlist
             Text(
                 text = "Playlist: ${selectedPlaylist.name}",
                 style = MaterialTheme.typography.bodyMedium,
@@ -78,11 +78,10 @@ fun SongSelectionScreen(
                 }
             }
 
-            // Button to confirm song selection
+            // Knapp som skulle brukes til å bekrefte sangene som brukeren skulle legge til
+            // (Ikke implementert)
             Button(
                 onClick = {
-                    // Handle the confirmation of selected songs here
-                    // You can navigate back or perform other actions
                     navController.popBackStack()
                 },
                 modifier = Modifier
@@ -107,6 +106,7 @@ fun SongSelectionScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongItem(song: Song, onSongClick: (String) -> Unit) {
+    //Viser frem sanger i Card oppsett med litt UI kode
     Card(
         onClick = { onSongClick(song.uid) },
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)
